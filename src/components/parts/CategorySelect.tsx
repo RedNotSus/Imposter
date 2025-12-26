@@ -52,8 +52,15 @@ export function CategorySelect({
     });
   }, [allCategories, selected]);
 
-  const handleSelectAll = () =>
-    setLocalSelected(allCategories.map((c) => c.name));
+  const allSelected = localSelected.length === allCategories.length;
+
+  const handleToggleAll = () => {
+    if (allSelected) {
+      setLocalSelected([]);
+    } else {
+      setLocalSelected(allCategories.map((c) => c.name));
+    }
+  };
 
   const handleSave = () => {
     const next =
@@ -72,7 +79,7 @@ export function CategorySelect({
   const renderIcon = (iconName?: string) => {
     if (!iconName) return null;
     const IconComponent = (
-      Icons as Record<string, ComponentType<{ className?: string }>>
+      Icons as unknown as Record<string, ComponentType<{ className?: string }>>
     )[iconName];
     if (!IconComponent) return null;
     return <IconComponent className="h-4 w-4" />;
@@ -85,7 +92,7 @@ export function CategorySelect({
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] border-accent bg-card">
+      <DialogContent className="sm:max-w-106.25 border-accent bg-card">
         <DialogHeader>
           <DialogTitle>Select Categories</DialogTitle>
         </DialogHeader>
@@ -95,8 +102,8 @@ export function CategorySelect({
               ? "All categories selected"
               : `${localSelected.length} of ${allCategories.length} selected`}
           </p>
-          <Button size="sm" variant="ghost" onClick={handleSelectAll}>
-            Select all
+          <Button size="sm" variant="ghost" onClick={handleToggleAll}>
+            {allSelected ? "Deselect all" : "Select all"}
           </Button>
         </div>
         <ToggleGroup

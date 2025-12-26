@@ -39,7 +39,7 @@ function RevealCard({ word }: { word: string }) {
             {init && !isFlipped && (
               <Particles
                 id="card-particles"
-                options={particlesOptions as ISourceOptions}
+                options={particlesOptions as unknown as ISourceOptions}
                 className="absolute inset-0 z-0 pointer-events-none"
                 style={{ width: "100%", height: "100%" }}
               />

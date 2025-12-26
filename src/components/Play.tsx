@@ -24,22 +24,82 @@ type WordsData = {
 
 const typedWords = wordsData as WordsData;
 
-function Play() {
-  const [players, setPlayers] = useState([
-    { id: 1, name: "Player 1" },
-    { id: 2, name: "Player 2" },
-    { id: 3, name: "Player 3" },
-    { id: 4, name: "Player 4" },
-  ]);
+const STORAGE_KEYS = {
+  players: "imposter-players",
+  imposters: "imposter-imposters",
+  categories: "imposter-categories",
+};
 
-  const [imposters, setImposters] = useState(1);
+function Play() {
   const allCategories = useMemo(
     () => typedWords.categories.map(({ name, icon }) => ({ name, icon })),
     []
   );
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(
-    allCategories.map((category) => category.name)
-  );
+
+  const [players, setPlayers] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.players);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch {
+        return [
+          { id: 1, name: "Player 1" },
+          { id: 2, name: "Player 2" },
+          { id: 3, name: "Player 3" },
+          { id: 4, name: "Player 4" },
+        ];
+      }
+    }
+    return [
+      { id: 1, name: "Player 1" },
+      { id: 2, name: "Player 2" },
+      { id: 3, name: "Player 3" },
+      { id: 4, name: "Player 4" },
+    ];
+  });
+
+  const [imposters, setImposters] = useState(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.imposters);
+    if (saved) {
+      const parsed = parseInt(saved, 10);
+      return isNaN(parsed) ? 1 : parsed;
+    }
+    return 1;
+  });
+
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(() => {
+    const saved = localStorage.getItem(STORAGE_KEYS.categories);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        const validCategories = parsed.filter((cat: string) =>
+          allCategories.some((c) => c.name === cat)
+        );
+        return validCategories.length > 0
+          ? validCategories
+          : allCategories.map((c) => c.name);
+      } catch {
+        return allCategories.map((c) => c.name);
+      }
+    }
+    return allCategories.map((c) => c.name);
+  });
+
+  // Save to localStorage whenever values change
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.players, JSON.stringify(players));
+  }, [players]);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEYS.imposters, imposters.toString());
+  }, [imposters]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      STORAGE_KEYS.categories,
+      JSON.stringify(selectedCategories)
+    );
+  }, [selectedCategories]);
 
   function StartGame() {
     const filtered = typedWords.categories.filter((category) =>
@@ -52,7 +112,7 @@ function Play() {
       category.words[Math.floor(Math.random() * category.words.length)];
 
     const shuffledIds = players
-      .map((p) => p.id)
+      .map((p: { id: any }) => p.id)
       .sort(() => Math.random() - 0.5);
     const imposterIds = new Set(shuffledIds.slice(0, imposters));
 
@@ -142,7 +202,7 @@ function Play() {
             <Button
               variant="default"
               className="w-full p-6 mb-3 hover:scale-105 active:scale-95 transition duration-200 mx-auto "
-              onClick={StartGame(players, imposters, selectedCategories)}
+              onClick={StartGame()}
             >
               Start Game
             </Button>
