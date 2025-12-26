@@ -27,12 +27,14 @@ function StartingCard() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button
-            variant="default"
-            className="w-full p-6 mb-3 hover:scale-105 active:scale-95 transition duration-200"
-          >
-            Get Started
-          </Button>
+          <Link to="/play">
+            <Button
+              variant="default"
+              className="w-full p-6 mb-3 hover:scale-105 active:scale-95 transition duration-200"
+            >
+              Get Started
+            </Button>
+          </Link>
           <Link to="/how">
             <Button
               variant="outline"
