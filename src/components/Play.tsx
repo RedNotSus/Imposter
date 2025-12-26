@@ -11,8 +11,61 @@ import { Button } from "@/components/ui/button";
 import { Users, UserRoundSearch } from "lucide-react";
 
 import { Players } from "./parts/Players";
+import { ImposterSelect } from "./parts/ImposterSelect";
+import { useEffect, useMemo, useState } from "react";
+import wordsData from "@/assets/words.json";
+
+import { CategorySelect } from "./parts/CategorySelect";
+
+type WordsData = {
+  categories: { name: string; icon?: string; words: string[] }[];
+};
+
+const typedWords = wordsData as WordsData;
 
 function Play() {
+  const [players, setPlayers] = useState([
+    { id: 1, name: "Player 1" },
+    { id: 2, name: "Player 2" },
+    { id: 3, name: "Player 3" },
+    { id: 4, name: "Player 4" },
+  ]);
+
+  const [imposters, setImposters] = useState(1);
+  const allCategories = useMemo(
+    () => typedWords.categories.map(({ name, icon }) => ({ name, icon })),
+    []
+  );
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(
+    allCategories.map((category) => category.name)
+  );
+
+  function StartGame(
+    players: any,
+    imposters: number,
+    selectedCategories: string[]
+  ) {
+    return () => {
+      console.log("Starting game with settings:");
+      console.log("Players:", players);
+      console.log("Imposters:", imposters);
+      console.log("Selected Categories:", selectedCategories);
+      // Here you would typically navigate to the game screen or initialize the game state
+    };
+  }
+
+  const categoriesLabel =
+    selectedCategories.length === allCategories.length
+      ? "All"
+      : selectedCategories.slice(0, 3).join(", ") +
+        (selectedCategories.length > 3
+          ? ` +${selectedCategories.length - 3}`
+          : "");
+
+  useEffect(() => {
+    const maxImposters = Math.max(1, players.length - 1);
+    setImposters((prev) => Math.min(Math.max(1, prev), maxImposters));
+  }, [players.length]);
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
       <Button
@@ -33,12 +86,13 @@ function Play() {
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>Players</ItemTitle>
+
                 <ItemDescription className="text-left -mt-1.5">
-                  4
+                  {players.length}
                 </ItemDescription>
               </ItemContent>
               <ItemActions>
-                <Players />
+                <Players players={players} setPlayers={setPlayers} />
               </ItemActions>
             </Item>
             <Item variant="outline" className="-mt-4">
@@ -48,31 +102,36 @@ function Play() {
               <ItemContent>
                 <ItemTitle>Imposters</ItemTitle>
                 <ItemDescription className="text-left -mt-1.5">
-                  1
+                  {imposters}
                 </ItemDescription>
               </ItemContent>
               <ItemActions>
-                <Button size="sm" variant="outline">
-                  Edit
-                </Button>
+                <ImposterSelect
+                  count={imposters}
+                  setCount={setImposters}
+                  playerCount={players.length}
+                />
               </ItemActions>
             </Item>
             <Item variant="outline" className="-mt-4">
               <ItemContent>
                 <ItemTitle>Categories</ItemTitle>
                 <ItemDescription className="text-left -mt-1.5">
-                  All
+                  {categoriesLabel}
                 </ItemDescription>
               </ItemContent>
               <ItemActions>
-                <Button size="sm" variant="outline">
-                  Edit
-                </Button>
+                <CategorySelect
+                  allCategories={allCategories}
+                  selected={selectedCategories}
+                  setSelected={setSelectedCategories}
+                />
               </ItemActions>
             </Item>
             <Button
               variant="default"
               className="w-full p-6 mb-3 hover:scale-105 active:scale-95 transition duration-200 mx-auto "
+              onClick={StartGame(players, imposters, selectedCategories)}
             >
               Start Game
             </Button>
