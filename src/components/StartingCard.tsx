@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import RevealCard from "./parts/RevealCard";
 
 import logo from "/src/assets/logo.png";
 import { Link } from "react-router-dom";

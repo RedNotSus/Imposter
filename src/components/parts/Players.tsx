@@ -49,6 +49,7 @@ export function Players({ players, setPlayers }: PlayersProps) {
   const handleSave = () => {
     setPlayers(localPlayers);
     setOpen(false);
+    localStorage.setItem("players", JSON.stringify(localPlayers));
   };
 
   return (

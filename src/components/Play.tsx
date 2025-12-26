@@ -16,6 +16,7 @@ import { useEffect, useMemo, useState } from "react";
 import wordsData from "@/assets/words.json";
 
 import { CategorySelect } from "./parts/CategorySelect";
+import RevealCard from "./parts/RevealCard";
 
 type WordsData = {
   categories: { name: string; icon?: string; words: string[] }[];
@@ -40,17 +41,27 @@ function Play() {
     allCategories.map((category) => category.name)
   );
 
-  function StartGame(
-    players: any,
-    imposters: number,
-    selectedCategories: string[]
-  ) {
+  function StartGame() {
+    const filtered = typedWords.categories.filter((category) =>
+      selectedCategories.includes(category.name)
+    );
+    if (!filtered.length) return () => {};
+
+    const category = filtered[Math.floor(Math.random() * filtered.length)];
+    const secretWord =
+      category.words[Math.floor(Math.random() * category.words.length)];
+
+    const shuffledIds = players
+      .map((p) => p.id)
+      .sort(() => Math.random() - 0.5);
+    const imposterIds = new Set(shuffledIds.slice(0, imposters));
+
     return () => {
-      console.log("Starting game with settings:");
-      console.log("Players:", players);
-      console.log("Imposters:", imposters);
-      console.log("Selected Categories:", selectedCategories);
-      // Here you would typically navigate to the game screen or initialize the game state
+      alert(
+        `Game Started!\nCategory: ${
+          category.name
+        }\nSecret Word: ${secretWord}\nImposter: ${[...imposterIds].join(", ")}`
+      );
     };
   }
 
