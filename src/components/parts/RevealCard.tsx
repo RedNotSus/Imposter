@@ -47,7 +47,7 @@ function RevealCard({ word, subtitle }: RevealCardProps) {
           }}
         >
           <Card
-            className="w-full border-accent relative overflow-hidden p-35"
+            className="w-full border-accent relative overflow-hidden p-35 hover:scale-105 active:scale-95 transition duration-200"
             style={{ backfaceVisibility: "hidden" }}
           >
             {init && !isFlipped && (
