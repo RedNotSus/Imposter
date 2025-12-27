@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import StartingCard from "./components/StartingCard";
 import How from "./components/How";
 import Play from "./components/Play";
-import RevealCard from "./components/parts/RevealCard";
 import IndividualPlayer from "./components/parts/IndividualPlayer";
 
 function App() {
@@ -12,7 +11,6 @@ function App() {
         <Route path="/" element={<StartingCard />} />
         <Route path="/how" element={<How />} />
         <Route path="/play" element={<Play />} />
-        <Route path="/reveal" element={<RevealCard word="Example Word" />} />
         <Route
           path="/player"
           element={

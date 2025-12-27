@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useMemo, useState } from "react";
 import IndividualPlayer from "./IndividualPlayer";
 import RevealCard from "./RevealCard";
-import { Link } from "react-router-dom";
+import RevealImposter from "./RevealImposter";
 
 type PlayerWithRole = {
   id: number;
@@ -19,12 +19,32 @@ type PlayerScreenProps = {
 
 export function PlayerScreen({ players, onRestart }: PlayerScreenProps) {
   const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
+  const [showRevealImposter, setShowRevealImposter] = useState(false);
+  const [revealedPlayerIds, setRevealedPlayerIds] = useState<Set<number>>(
+    new Set()
+  );
 
   const category = useMemo(() => players[0]?.category ?? "", [players]);
   const selectedPlayer = useMemo(
     () => players.find((p) => p.id === selectedPlayerId) ?? null,
     [players, selectedPlayerId]
   );
+
+  const handleBackToPlayers = () => {
+    if (selectedPlayerId !== null) {
+      setRevealedPlayerIds((prev) => new Set(prev).add(selectedPlayerId));
+    }
+    setSelectedPlayerId(null);
+  };
+
+  if (showRevealImposter) {
+    return (
+      <RevealImposter
+        players={players}
+        onBack={() => setShowRevealImposter(false)}
+      />
+    );
+  }
 
   if (selectedPlayer) {
     const word = selectedPlayer.isImposter ? "Imposter" : selectedPlayer.word;
@@ -34,7 +54,7 @@ export function PlayerScreen({ players, onRestart }: PlayerScreenProps) {
         <Button
           variant="outline"
           className="absolute left-4 top-4"
-          onClick={() => setSelectedPlayerId(null)}
+          onClick={handleBackToPlayers}
         >
           ← Back to players
         </Button>
@@ -61,17 +81,17 @@ export function PlayerScreen({ players, onRestart }: PlayerScreenProps) {
             key={player.id}
             player={player}
             onReveal={(id) => setSelectedPlayerId(id)}
+            disabled={revealedPlayerIds.has(player.id)}
           />
         ))}
       </div>
-      <Link to="/how">
-        <Button
-          variant="outline"
-          className="w-1/8 p-6 hover:scale-105 active:scale-95 transition duration-200 absolute bottom-5 items-center left-1/2 -translate-x-1/2"
-        >
-          Reveal Imposter
-        </Button>
-      </Link>
+      <Button
+        variant="outline"
+        className="w-auto px-8 p-6 hover:scale-105 active:scale-95 transition duration-200 absolute bottom-5 items-center left-1/2 -translate-x-1/2"
+        onClick={() => setShowRevealImposter(true)}
+      >
+        Reveal Imposter
+      </Button>
     </div>
   );
 }

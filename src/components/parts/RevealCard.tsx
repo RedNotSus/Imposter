@@ -25,20 +25,29 @@ function RevealCard({ word, subtitle }: RevealCardProps) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
       <div
-        className="w-full max-w-sm perspective-1000"
+        className="w-full max-w-sm perspective-1000 cursor-pointer"
         style={{ perspective: "1000px" }}
-        onMouseEnter={() => setIsFlipped(true)}
-        onMouseLeave={() => setIsFlipped(false)}
+        role="button"
+        tabIndex={0}
+        onClick={() => setIsFlipped(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setIsFlipped(true);
+          }
+        }}
+        aria-pressed={isFlipped}
+        aria-label={isFlipped ? "Card revealed" : "Reveal card"}
       >
         <div
-          className="relative w-full transition-transform duration-800 ease-in-out"
+          className="relative w-full transition-transform duration-650 ease-in-out"
           style={{
             transformStyle: "preserve-3d",
             transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
           <Card
-            className="w-full border-accent relative overflow-hidden p-33"
+            className="w-full border-accent relative overflow-hidden p-35"
             style={{ backfaceVisibility: "hidden" }}
           >
             {init && !isFlipped && (
