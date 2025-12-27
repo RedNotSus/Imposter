@@ -16,13 +16,24 @@ import { useEffect, useMemo, useState } from "react";
 import wordsData from "@/assets/words.json";
 
 import { CategorySelect } from "./parts/CategorySelect";
-import RevealCard from "./parts/RevealCard";
+import PlayerScreen from "./parts/PlayerScreen";
 
 type WordsData = {
   categories: { name: string; icon?: string; words: string[] }[];
 };
 
 const typedWords = wordsData as WordsData;
+
+type Player = {
+  id: number;
+  name: string;
+};
+
+type RoundPlayer = Player & {
+  isImposter: boolean;
+  word: string;
+  category: string;
+};
 
 const STORAGE_KEYS = {
   players: "imposter-players",
@@ -36,7 +47,7 @@ function Play() {
     []
   );
 
-  const [players, setPlayers] = useState(() => {
+  const [players, setPlayers] = useState<Player[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.players);
     if (saved) {
       try {
@@ -85,6 +96,8 @@ function Play() {
     return allCategories.map((c) => c.name);
   });
 
+  const [roundPlayers, setRoundPlayers] = useState<RoundPlayer[] | null>(null);
+
   // Save to localStorage whenever values change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.players, JSON.stringify(players));
@@ -112,17 +125,19 @@ function Play() {
       category.words[Math.floor(Math.random() * category.words.length)];
 
     const shuffledIds = players
-      .map((p: { id: any }) => p.id)
+      .map((p) => p.id)
       .sort(() => Math.random() - 0.5);
     const imposterIds = new Set(shuffledIds.slice(0, imposters));
 
-    console.log(secretWord);
-    console.log(imposterIds);
-    const imposterMatchedIdsName = Array.from(imposterIds).map(
-      (id) => players.find((p: any) => p.id === id)?.name
-    );
-    console.log(imposterMatchedIdsName);
-    console.log(players);
+    const assignments: RoundPlayer[] = players.map((player) => ({
+      ...player,
+      isImposter: imposterIds.has(player.id),
+      word: secretWord,
+      category: category.name,
+    }));
+
+    setRoundPlayers(assignments);
+    setImposters((prev) => Math.min(prev, players.length - 1));
   }
 
   const categoriesLabel =
@@ -137,6 +152,15 @@ function Play() {
     const maxImposters = Math.max(1, players.length - 1);
     setImposters((prev) => Math.min(Math.max(1, prev), maxImposters));
   }, [players.length]);
+
+  if (roundPlayers) {
+    return (
+      <PlayerScreen
+        players={roundPlayers}
+        onRestart={() => setRoundPlayers(null)}
+      />
+    );
+  }
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
       <Button

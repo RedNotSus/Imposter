@@ -5,7 +5,12 @@ import { loadFull } from "tsparticles";
 import { type ISourceOptions } from "@tsparticles/engine";
 import particlesOptions from "./particles.json";
 
-function RevealCard({ word }: { word: string }) {
+type RevealCardProps = {
+  word: string;
+  subtitle?: string;
+};
+
+function RevealCard({ word, subtitle }: RevealCardProps) {
   const [init, setInit] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
 
@@ -54,7 +59,12 @@ function RevealCard({ word }: { word: string }) {
             }}
           >
             <CardContent className="relative z-10 flex items-center justify-center">
-              <p className="text-2xl font-bold text-center">{word}</p>
+              <div className="text-center space-y-2">
+                <p className="text-2xl font-bold">{word}</p>
+                {subtitle ? (
+                  <p className="text-sm text-muted-foreground">{subtitle}</p>
+                ) : null}
+              </div>
             </CardContent>
           </Card>
         </div>
