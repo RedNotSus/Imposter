@@ -105,7 +105,7 @@ function Play() {
     const filtered = typedWords.categories.filter((category) =>
       selectedCategories.includes(category.name)
     );
-    if (!filtered.length) return () => {};
+    if (!filtered.length) return;
 
     const category = filtered[Math.floor(Math.random() * filtered.length)];
     const secretWord =
@@ -116,13 +116,13 @@ function Play() {
       .sort(() => Math.random() - 0.5);
     const imposterIds = new Set(shuffledIds.slice(0, imposters));
 
-    return () => {
-      alert(
-        `Game Started!\nCategory: ${
-          category.name
-        }\nSecret Word: ${secretWord}\nImposter: ${[...imposterIds].join(", ")}`
-      );
-    };
+    console.log(secretWord);
+    console.log(imposterIds);
+    const imposterMatchedIdsName = Array.from(imposterIds).map(
+      (id) => players.find((p: any) => p.id === id)?.name
+    );
+    console.log(imposterMatchedIdsName);
+    console.log(players);
   }
 
   const categoriesLabel =
@@ -202,7 +202,7 @@ function Play() {
             <Button
               variant="default"
               className="w-full p-6 mb-3 hover:scale-105 active:scale-95 transition duration-200 mx-auto "
-              onClick={StartGame()}
+              onClick={StartGame}
             >
               Start Game
             </Button>

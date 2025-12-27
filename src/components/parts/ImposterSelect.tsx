@@ -18,7 +18,11 @@ type ImposterProps = {
   playerCount: number;
 };
 
-export function ImposterSelect({ count, setCount, playerCount }: ImposterProps) {
+export function ImposterSelect({
+  count,
+  setCount,
+  playerCount,
+}: ImposterProps) {
   const [localCount, setLocalCount] = useState<number>(count);
   const [open, setOpen] = useState(false);
 
@@ -50,7 +54,7 @@ export function ImposterSelect({ count, setCount, playerCount }: ImposterProps) 
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] border-accent bg-card">
+      <DialogContent className="sm:max-w-106.25 border-accent bg-card">
         <DialogHeader>
           <DialogTitle>Edit Imposter Count</DialogTitle>
         </DialogHeader>

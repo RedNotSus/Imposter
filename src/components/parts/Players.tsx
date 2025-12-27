@@ -59,11 +59,11 @@ export function Players({ players, setPlayers }: PlayersProps) {
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px] border-accent bg-card">
+      <DialogContent className="sm:max-w-106.25 border-accent bg-card">
         <DialogHeader>
           <DialogTitle>Edit Players</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 max-h-[300px] overflow-y-auto">
+        <div className="grid gap-4 max-h-75 overflow-y-auto">
           {localPlayers.map((player, index) => (
             <div key={player.id} className="flex gap-2 items-end">
               <div className="grid gap-2 flex-1">
