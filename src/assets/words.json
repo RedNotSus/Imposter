@@ -169,7 +169,8 @@
         "Spring Roll",
         "Kebab",
         "Falafel",
-        "Hummus"
+        "Hummus",
+        "Salsa"
       ]
     },
     {
@@ -213,7 +214,6 @@
         "Delhi",
         "Sydney",
         "Melbourne",
-        "Cairo",
         "Dubai",
         "Istanbul",
         "Toronto",
@@ -221,30 +221,16 @@
         "Rio de Janeiro",
         "Buenos Aires",
         "Lima",
-        "Bogota",
-        "Santiago",
-        "Bangkok",
         "Singapore",
         "Jakarta",
-        "Hanoi",
-        "Manila",
-        "Kuala Lumpur",
         "Hong Kong",
         "Taipei",
-        "Jerusalem",
-        "Tel Aviv",
-        "Tehran",
         "Baghdad",
-        "Riyadh",
         "Amsterdam",
         "Brussels",
         "Vienna",
-        "Zurich",
-        "Geneva",
         "Stockholm",
-        "Oslo",
         "Copenhagen",
-        "Helsinki",
         "Dublin",
         "Lisbon",
         "Athens",
@@ -252,10 +238,7 @@
         "Prague",
         "Budapest",
         "Bucharest",
-        "Kiev",
-        "Nairobi",
-        "Casablanca",
-        "Cape Town"
+        "Kiev"
       ]
     },
     {
