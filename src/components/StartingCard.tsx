@@ -10,6 +10,8 @@ import {
 import logo from "/src/assets/logo.png";
 import { Link } from "react-router-dom";
 
+import { Github } from "lucide-react";
+
 function StartingCard() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
@@ -45,6 +47,18 @@ function StartingCard() {
           </Link>
         </CardContent>
       </Card>
+      <a
+        href="https://github.com/rednotsus/imposter"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <Button
+          variant="link"
+          className="border-accent text-muted-foreground hover:underline hover:scale-105 active:scale-95 transition duration-200 bg-card absolute bottom-3 right-3 cursor-pointer"
+        >
+          <Github></Github>
+        </Button>
+      </a>
     </div>
   );
 }
