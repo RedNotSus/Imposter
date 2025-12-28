@@ -17,6 +17,7 @@ import wordsData from "@/assets/words.json";
 
 import { CategorySelect } from "./parts/CategorySelect";
 import PlayerScreen from "./parts/PlayerScreen";
+import { useCustomCategories } from "@/hooks/useCustomCategories";
 
 type WordsData = {
   categories: { name: string; icon?: string; words: string[] }[];
@@ -42,9 +43,25 @@ const STORAGE_KEYS = {
 };
 
 function Play() {
-  const allCategories = useMemo(
+  const builtInCategories = useMemo(
     () => typedWords.categories.map(({ name, icon }) => ({ name, icon })),
     []
+  );
+
+  const {
+    categories: customCategories,
+    addCategory,
+    updateCategory,
+    deleteCategory,
+  } = useCustomCategories();
+
+  // Combine built-in and custom categories
+  const allCategories = useMemo(
+    () => [
+      ...builtInCategories,
+      ...customCategories.map((c) => ({ name: c.name, icon: c.icon, isCustom: true })),
+    ],
+    [builtInCategories, customCategories]
   );
 
   const [players, setPlayers] = useState<Player[]>(() => {
@@ -115,12 +132,22 @@ function Play() {
   }, [selectedCategories]);
 
   function StartGame() {
-    const filtered = typedWords.categories.filter((category) =>
+    // Get all available word sources (built-in + custom)
+    const builtInFiltered = typedWords.categories.filter((category) =>
       selectedCategories.includes(category.name)
     );
-    if (!filtered.length) return;
+    const customFiltered = customCategories.filter((category) =>
+      selectedCategories.includes(category.name)
+    );
 
-    const category = filtered[Math.floor(Math.random() * filtered.length)];
+    const allFiltered = [
+      ...builtInFiltered.map((c) => ({ name: c.name, words: c.words })),
+      ...customFiltered.map((c) => ({ name: c.name, words: c.words })),
+    ];
+
+    if (!allFiltered.length) return;
+
+    const category = allFiltered[Math.floor(Math.random() * allFiltered.length)];
     const secretWord =
       category.words[Math.floor(Math.random() * category.words.length)];
 
@@ -152,6 +179,19 @@ function Play() {
     const maxImposters = Math.max(1, players.length - 1);
     setImposters((prev) => Math.min(Math.max(1, prev), maxImposters));
   }, [players.length]);
+
+  // Handlers for custom categories
+  const handleAddCustom = (data: { name: string; words: string[]; icon?: string }) => {
+    addCategory(data);
+  };
+
+  const handleUpdateCustom = (id: string, data: { name: string; words: string[]; icon?: string }) => {
+    updateCategory(id, data);
+  };
+
+  const handleDeleteCustom = (id: string) => {
+    deleteCategory(id);
+  };
 
   if (roundPlayers) {
     return (
@@ -220,6 +260,10 @@ function Play() {
                   allCategories={allCategories}
                   selected={selectedCategories}
                   setSelected={setSelectedCategories}
+                  customCategories={customCategories}
+                  onAddCustom={handleAddCustom}
+                  onUpdateCustom={handleUpdateCustom}
+                  onDeleteCustom={handleDeleteCustom}
                 />
               </ItemActions>
             </Item>
