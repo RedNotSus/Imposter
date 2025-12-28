@@ -99,21 +99,31 @@ function Play() {
     const saved = localStorage.getItem(STORAGE_KEYS.categories);
     if (saved) {
       try {
-        const parsed = JSON.parse(saved);
-        const validCategories = parsed.filter((cat: string) =>
-          allCategories.some((c) => c.name === cat)
-        );
-        return validCategories.length > 0
-          ? validCategories
-          : allCategories.map((c) => c.name);
+        return JSON.parse(saved);
       } catch {
-        return allCategories.map((c) => c.name);
+        return []; // Will be populated by useEffect below
       }
     }
-    return allCategories.map((c) => c.name);
+    return []; // Will be populated by useEffect below
   });
 
   const [roundPlayers, setRoundPlayers] = useState<RoundPlayer[] | null>(null);
+
+  // Sync selected categories when allCategories changes
+  // Default to ALL categories if none are selected or saved selections are invalid
+  useEffect(() => {
+    setSelectedCategories((prev) => {
+      // Filter to only valid category names
+      const validSelected = prev.filter((name) =>
+        allCategories.some((c) => c.name === name)
+      );
+      // If no valid selections, default to ALL categories
+      if (validSelected.length === 0) {
+        return allCategories.map((c) => c.name);
+      }
+      return validSelected;
+    });
+  }, [allCategories]);
 
   // Save to localStorage whenever values change
   useEffect(() => {

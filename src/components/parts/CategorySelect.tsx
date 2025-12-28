@@ -226,7 +226,7 @@ export function CategorySelect({
                       <ToggleGroupItem
                         value={name}
                         aria-label={`Toggle ${name}`}
-                        className="data-[state=on]:bg-card data-[state=on]:border-accent data-[state=on]:text-primary data-[state=off]:bg-muted/10 data-[state=off]:border-accent data-[state=off]:text-muted-foreground hover:scale-105 active:scale-95 transition duration-200 flex items-center gap-2 border px-3 py-1 rounded-md text-sm"
+                        className="data-[state=on]:bg-card data-[state=on]:border-primary data-[state=on]:text-primary data-[state=off]:bg-muted/10 data-[state=off]:border-accent data-[state=off]:text-muted-foreground hover:scale-105 active:scale-95 transition duration-200 flex items-center gap-2 border px-3 py-1 rounded-md text-sm"
                       >
                         {renderIcon(icon)}
                         <span>{name}</span>
