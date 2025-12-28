@@ -8,7 +8,8 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
-import { Users, UserRoundSearch } from "lucide-react";
+import { Users, UserRoundSearch, AlertCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 import { Players } from "./parts/Players";
 import { ImposterSelect } from "./parts/ImposterSelect";
@@ -18,6 +19,7 @@ import wordsData from "@/assets/words.json";
 import { CategorySelect } from "./parts/CategorySelect";
 import PlayerScreen from "./parts/PlayerScreen";
 import { useCustomCategories } from "@/hooks/useCustomCategories";
+import { useHaptic } from "@/hooks/useHaptic";
 
 type WordsData = {
   categories: { name: string; icon?: string; words: string[] }[];
@@ -43,6 +45,8 @@ const STORAGE_KEYS = {
 };
 
 function Play() {
+  const { trigger: triggerHaptic } = useHaptic();
+  
   const builtInCategories = useMemo(
     () => typedWords.categories.map(({ name, icon }) => ({ name, icon })),
     []
@@ -108,6 +112,8 @@ function Play() {
 
   const [roundPlayers, setRoundPlayers] = useState<RoundPlayer[] | null>(null);
 
+  const canStartGame = selectedCategories.length > 0 && players.length >= 2;
+
   useEffect(() => {
     setSelectedCategories((prev) => {
       const validSelected = prev.filter((name) =>
@@ -136,6 +142,10 @@ function Play() {
   }, [selectedCategories]);
 
   function StartGame() {
+    if (!canStartGame) return;
+    
+    triggerHaptic('medium');
+    
     const builtInFiltered = typedWords.categories.filter((category) =>
       selectedCategories.includes(category.name)
     );
@@ -203,27 +213,33 @@ function Play() {
       />
     );
   }
+  
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
-      <Button
-        variant="outline"
-        className="hover:scale-105 active:scale-95 transition duration-200 fixed top-4 left-4"
-      >
-        <a href="/">← Back</a>
-      </Button>
-      <Card className="w-full max-w-sm border-accent">
+
+      <Link to="/" className="fixed top-4 left-4 z-10">
+        <Button
+          variant="outline"
+          className="hover:scale-105 active:scale-95 transition duration-200 animate-in fade-in-0 slide-in-from-left-2 duration-300"
+        >
+          ← Back
+        </Button>
+      </Link>
+      
+
+      <Card className="w-full max-w-sm border-accent animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
         <CardContent>
-          <p className="text-2xl font-semibold mb-4 -mt-2 text-center">
+          <p className="text-2xl font-semibold mb-4 -mt-2 text-center animate-in fade-in-0 duration-500 delay-100">
             Game Settings
           </p>
           <div className="flex w-full max-w-lg flex-col gap-6">
-            <Item variant="outline">
+
+            <Item variant="outline" className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-150">
               <ItemMedia variant="icon" className="border-accent">
                 <Users />
               </ItemMedia>
               <ItemContent>
                 <ItemTitle>Players</ItemTitle>
-
                 <ItemDescription className="text-left -mt-1.5">
                   {players.length}
                 </ItemDescription>
@@ -232,7 +248,8 @@ function Play() {
                 <Players players={players} setPlayers={setPlayers} />
               </ItemActions>
             </Item>
-            <Item variant="outline" className="-mt-4">
+
+            <Item variant="outline" className="-mt-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-200">
               <ItemMedia variant="icon" className="border-accent">
                 <UserRoundSearch />
               </ItemMedia>
@@ -250,7 +267,8 @@ function Play() {
                 />
               </ItemActions>
             </Item>
-            <Item variant="outline" className="-mt-4">
+            
+            <Item variant="outline" className="-mt-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-250">
               <ItemContent>
                 <ItemTitle>Categories</ItemTitle>
                 <ItemDescription className="text-left -mt-1.5">
@@ -269,10 +287,27 @@ function Play() {
                 />
               </ItemActions>
             </Item>
+            
+            {!canStartGame && (
+              <div className="flex items-center gap-2 text-sm text-amber-500 -mt-3 animate-in fade-in-0 duration-300">
+                <AlertCircle className="h-4 w-4" />
+                <span>
+                  {selectedCategories.length === 0 
+                    ? "Select at least one category" 
+                    : "Need at least 2 players"}
+                </span>
+              </div>
+            )}
+            
             <Button
               variant="default"
-              className="w-full p-6 mb-3 hover:scale-105 active:scale-95 transition duration-200 mx-auto "
+              className={`w-full p-6 mb-3 transition duration-200 mx-auto animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-300 ${
+                canStartGame 
+                  ? "hover:scale-105 active:scale-95" 
+                  : "opacity-50 cursor-not-allowed"
+              }`}
               onClick={StartGame}
+              disabled={!canStartGame}
             >
               Start Game
             </Button>

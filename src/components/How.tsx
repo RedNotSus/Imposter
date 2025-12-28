@@ -5,64 +5,85 @@
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import {
+  Users,
+  Lightbulb,
+  Share2,
+  MessageCircle,
+  Vote,
+  RotateCcw,
+  Target,
+  RefreshCw,
+  Eye,
+  type LucideIcon,
+} from "lucide-react";
 
 function How() {
-  const steps = [
+  const steps: { step: number; title: string; description: string; icon: LucideIcon }[] = [
     {
       step: 1,
       title: "Gather players and materials",
       description:
         'Bring together at least 4 players and prepare slips of paper: one with "Imposter" and the rest with the chosen secret word.',
+      icon: Users,
     },
     {
       step: 2,
       title: "Choose a secret word",
       description:
         "Pick a word from a list, generator, or by suggestion. Example: Pizza.",
+      icon: Lightbulb,
     },
     {
       step: 3,
       title: "Deal the papers",
       description:
         "Hand out the slips so that all but the imposter see the secret word.",
+      icon: Share2,
     },
     {
       step: 4,
       title: "Decide who goes first",
       description:
         "Choose a starting player (youngest player, roll of dice, or random pick). Play moves clockwise.",
+      icon: Target,
     },
     {
       step: 5,
       title: "Give clues in turn",
       description:
         'Each player gives one word (default rule) to describe the secret word, without saying it directly. Example: If the word is Pizza, clues might be "Cheesy" or "Slices." Continue around the circle.',
+      icon: MessageCircle,
     },
     {
       step: 6,
       title: "Continue taking turns",
       description:
         "Go around for several rounds of clues. The imposter tries to blend in by guessing what the word might be based on others' clues.",
+      icon: RefreshCw,
     },
     {
       step: 7,
       title: "Discuss and vote",
       description:
         "After a set number of rounds (usually 2-3), everyone discusses and votes on who they think the imposter is. The person with the most votes is revealed.",
+      icon: Vote,
     },
     {
       step: 8,
       title: "Reveal and recap",
       description:
         "Reveal the secret word and the imposter. Recap funny or odd clues - often the best part is laughing about why someone described a word in such a weird way.",
+      icon: Eye,
     },
     {
       step: 9,
       title: "Play the next round",
       description:
         "Start a new round with a fresh word and slips of paper. Ideally, play enough rounds so that everyone has a chance to be the imposter.",
+      icon: RotateCcw,
     },
   ];
 
@@ -93,12 +114,14 @@ function How() {
 
   return (
     <div className="p-[5vw] max-w-5xl mx-auto space-y-6">
-      <Button
-        variant="outline"
-        className="hover:scale-105 active:scale-95 transition duration-200 fixed top-4 left-4"
-      >
-        <a href="/">← Back</a>
-      </Button>
+      <Link to="/" className="fixed top-4 left-4 z-10">
+        <Button
+          variant="outline"
+          className="hover:scale-105 active:scale-95 transition duration-200 animate-in fade-in-0 duration-300"
+        >
+          ← Back
+        </Button>
+      </Link>
       <Card className="w-full border-accent text-primary overflow-hidden">
         <div className="from-primary/10 via-accent/10 to-primary/10 p-8 text-center">
           <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight text-balance mb-4">
@@ -308,22 +331,28 @@ function How() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {steps.map((item) => (
-              <div
-                key={item.step}
-                className="flex gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
-              >
-                <div className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">
-                  {item.step}
+            {steps.map((item) => {
+              const IconComponent = item.icon;
+              return (
+                <div
+                  key={item.step}
+                  className="flex gap-4 p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors"
+                >
+                  <div className="shrink-0 w-10 h-10 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                    <IconComponent className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-lg flex items-center gap-2">
+                      <span className="text-primary">Step {item.step}:</span>
+                      {item.title}
+                    </h4>
+                    <p className="text-muted-foreground text-sm mt-1">
+                      {item.description}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-lg">{item.title}</h4>
-                  <p className="text-muted-foreground text-sm mt-1">
-                    {item.description}
-                  </p>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-6 p-4 bg-accent/10 rounded-lg border border-accent/30">

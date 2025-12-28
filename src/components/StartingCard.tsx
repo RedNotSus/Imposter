@@ -15,20 +15,24 @@ import { Github } from "lucide-react";
 function StartingCard() {
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
-      <Card className="w-full max-w-sm border-accent">
+      <Card className="w-full max-w-sm border-accent animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
         <CardHeader>
-          <img src={logo} className="-mt-10 -mb-10"></img>
-          <CardTitle className="text-center text-4xl font-extrabold ">
+          <img 
+            src={logo} 
+            className="-mt-10 -mb-10 animate-in fade-in-0 zoom-in-95 duration-700 delay-100"
+            alt="Imposter Logo"
+          />
+          <CardTitle className="text-center text-4xl font-extrabold animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-200">
             Imposter
           </CardTitle>
-          <CardDescription className="text-center text-lg text-chart-4">
+          <CardDescription className="text-center text-lg text-chart-4 animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-300">
             Word Game
           </CardDescription>
-          <CardDescription className="">
+          <CardDescription className="animate-in fade-in-0 duration-500 delay-400">
             A party game of hidden ideas and cunning clues
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="animate-in fade-in-0 slide-in-from-bottom-2 duration-500 delay-500">
           <Link to="/play">
             <Button
               variant="default"
@@ -47,18 +51,20 @@ function StartingCard() {
           </Link>
         </CardContent>
       </Card>
-      <a
-        href="https://github.com/rednotsus/imposter"
+      <Link
+        to="https://github.com/rednotsus/imposter"
         target="_blank"
         rel="noopener noreferrer"
+        className="absolute bottom-3 right-3"
       >
         <Button
-          variant="link"
-          className="border-accent text-muted-foreground hover:underline hover:scale-105 active:scale-95 transition duration-200 bg-card absolute bottom-3 right-3 cursor-pointer"
+          variant="outline"
+          size="icon"
+          className="text-muted-foreground hover:text-foreground hover:scale-105 active:scale-95 transition duration-200 animate-in fade-in-0 duration-700 delay-700"
         >
-          <Github></Github>
+          <Github className="h-4 w-4" />
         </Button>
-      </a>
+      </Link>
     </div>
   );
 }
