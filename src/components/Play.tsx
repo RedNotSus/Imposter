@@ -55,7 +55,6 @@ function Play() {
     deleteCategory,
   } = useCustomCategories();
 
-  // Combine built-in and custom categories
   const allCategories = useMemo(
     () => [
       ...builtInCategories,
@@ -101,23 +100,19 @@ function Play() {
       try {
         return JSON.parse(saved);
       } catch {
-        return []; // Will be populated by useEffect below
+        return [];
       }
     }
-    return []; // Will be populated by useEffect below
+    return [];
   });
 
   const [roundPlayers, setRoundPlayers] = useState<RoundPlayer[] | null>(null);
 
-  // Sync selected categories when allCategories changes
-  // Default to ALL categories if none are selected or saved selections are invalid
   useEffect(() => {
     setSelectedCategories((prev) => {
-      // Filter to only valid category names
       const validSelected = prev.filter((name) =>
         allCategories.some((c) => c.name === name)
       );
-      // If no valid selections, default to ALL categories
       if (validSelected.length === 0) {
         return allCategories.map((c) => c.name);
       }
@@ -125,7 +120,6 @@ function Play() {
     });
   }, [allCategories]);
 
-  // Save to localStorage whenever values change
   useEffect(() => {
     localStorage.setItem(STORAGE_KEYS.players, JSON.stringify(players));
   }, [players]);
@@ -142,7 +136,6 @@ function Play() {
   }, [selectedCategories]);
 
   function StartGame() {
-    // Get all available word sources (built-in + custom)
     const builtInFiltered = typedWords.categories.filter((category) =>
       selectedCategories.includes(category.name)
     );
@@ -190,7 +183,6 @@ function Play() {
     setImposters((prev) => Math.min(Math.max(1, prev), maxImposters));
   }, [players.length]);
 
-  // Handlers for custom categories
   const handleAddCustom = (data: { name: string; words: string[]; icon?: string }) => {
     addCategory(data);
   };
