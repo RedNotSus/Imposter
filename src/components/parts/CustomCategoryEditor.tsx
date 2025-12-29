@@ -129,7 +129,7 @@ export function CustomCategoryEditor({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto space-y-4 py-2">
+        <div className="flex-1 overflow-y-auto space-y-4 py-2 ">
           <div className="space-y-2">
             <Label htmlFor="category-name">List Name</Label>
             <Input
@@ -147,7 +147,7 @@ export function CustomCategoryEditor({
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-2 overflow-hidden">
             <Label>Icon</Label>
             <div className="flex flex-wrap gap-2">
               {SUGGESTED_ICONS.map((iconName) => {
